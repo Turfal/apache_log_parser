@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template
+from flask import Flask, request, jsonify, render_template
 from db import db, LogEntry, get_entries_by_ip, get_entries_by_date_range, get_grouped_by_ip, get_grouped_by_date, get_all_entries
 import json
 import os
@@ -17,39 +17,65 @@ app.config['SQLALCHEMY_DATABASE_URI'] = db_url
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
 
+# Обработчик исключения 404 - страница не найдена
+@app.errorhandler(404)
+def not_found_error(error):
+    return render_template('error.html', error='Страница не найдена'), 404
+
+# Обработчик исключения 500 - внутренняя ошибка сервера
+@app.errorhandler(500)
+def internal_error(error):
+    db.session.rollback()
+    return render_template('error.html', error='Внутренняя ошибка сервера'), 500
+
+# Обработчик исключения общего типа
+@app.errorhandler(Exception)
+def general_error(error):
+    app.logger.exception(error)
+    return render_template('error.html', error='Произошла ошибка'), 500
+
 @app.route('/logs', methods=['GET'])
 def get_logs():
-    ip = request.args.get('ip')
-    start_date = request.args.get('start_date')
-    end_date = request.args.get('end_date')
+    try:
+        ip = request.args.get('ip')
+        start_date = request.args.get('start_date')
+        end_date = request.args.get('end_date')
 
-    if ip:
-        entries = get_entries_by_ip(ip)
-    elif start_date and end_date:
-        entries = get_entries_by_date_range(start_date, end_date)
-    else:
-        entries = get_all_entries()  # Return all entries if no parameters
+        if ip:
+            entries = get_entries_by_ip(ip)
+        elif start_date and end_date:
+            entries = get_entries_by_date_range(start_date, end_date)
+        else:
+            entries = LogEntry.query.all()  # Получить все записи, если нет параметров
 
-    return render_template("logs.html", entries=[entry.to_dict() for entry in entries])
+        if request.args.get('format') == 'json':
+            return jsonify(entries=[entry.to_dict() for entry in entries])
+        else:
+            return render_template("logs.html", entries=[entry.to_dict() for entry in entries])
+    except Exception as e:
+        app.logger.exception(e)
+        return render_template('error.html', error='Произошла ошибка'), 500
+
 
 
 @app.route('/logs/grouped', methods=['GET'])
 def get_grouped_logs():
-    group_by = request.args.get('group_by')
-    sort_by = request.args.get('sort_by', 'ip')  # Default sort by 'ip'
-    sort_order = request.args.get('sort_order', 'asc')  # Default sort order 'asc'
+    try:
+        group_by = request.args.get('group_by')
+        format_type = request.args.get('format', 'html')  # Формат по умолчанию HTML
 
-    if group_by == 'ip':
-        entries = get_grouped_by_ip()
-    elif group_by == 'date':
-        entries = get_grouped_by_date()
-    else:
-        entries = [entry.to_dict() for entry in get_all_entries()]  # Return all entries if no parameters
+        if group_by == 'ip':
+            entries = get_grouped_by_ip()
+        else:
+            entries = []  # Вернуть пустой список, если нет параметров
 
-    # Sort the entries based on the sorting parameters
-    entries = sort_entries(entries, sort_by, sort_order)
+        if format_type == 'json':
+            return jsonify(entries)
 
-    return render_template('grouped_logs.html', entries=entries)
+        return render_template('grouped_logs.html', entries=entries)
+    except Exception as e:
+        app.logger.exception(e)
+        return render_template('error.html', error='Произошла ошибка'), 500
 
 
 def sort_entries(entries, sort_by, sort_order):
