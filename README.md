@@ -21,7 +21,7 @@
 1. Клонируйте репозиторий:
 
    ```shell
-   git clone https://github.com/your-username/apache-log-parser.git
+   git clone https://github.com/Turfal/apache-log-parser.git
    ```
    
 2. Перейдите в каталог проекта:
