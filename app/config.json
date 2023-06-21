@@ -1,0 +1,18 @@
+{
+  "database": {
+    "DB_URL": "mysql+pymysql://root:tutnet55@localhost/test",
+    "name": "test",
+    "host": "localhost",
+    "user": "log_entry",
+    "password": "tutnet55",
+    "port": 3306
+  },
+  "logs": {
+    "directory": "logs",
+    "file_mask": "*.log"
+  },
+  "API": {
+    "API_HOST": "localhost",
+    "API_PORT": 5000
+  }
+}

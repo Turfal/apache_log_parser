@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Grouped Logs</title>
+</head>
+<body>
+    <table>
+        <thead>
+            <tr>
+                <th><a href="/logs/grouped?group_by=ip&sort_by=ip&sort_order={{ sort_order }}">IP</a></th>
+                <th><a href="/logs/grouped?group_by=ip&sort_by=count&sort_order={{ sort_order }}">Count</a></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for entry in entries %}
+            <tr>
+                <td>{{ entry.ip }}</td>
+                <td>{{ entry.count }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

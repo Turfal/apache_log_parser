@@ -1,0 +1,9 @@
+<!DOCTYPE html>
+<html>
+<body>
+<h1>Logs</h1>
+{% for entry in entries %}
+<p>IP: {{ entry.ip }}, Date: {{ entry.date }}</p>
+{% endfor %}
+</body>
+</html>
