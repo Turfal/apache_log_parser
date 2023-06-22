@@ -45,7 +45,7 @@
      pip install -r requirements.txt
 
 6. Настройте базу данных:
-    Откройте файл app/db.py и обновите переменную SQLALCHEMY_DATABASE_URI с данными подключения к вашей базе данных MySQL.
+    Откройте файл app/db.py & app/config.json и обновите переменную SQLALCHEMY_DATABASE_URI с данными подключения к вашей базе данных MySQL.
 
 7. Запустите приложение:
     python app/api.py
