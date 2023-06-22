@@ -63,14 +63,17 @@
    - python app/server.py
 
    Откройте веб-браузер и перейдите по адресу http://localhost:5000/, чтобы получить доступ к веб-интерфейсу.
+   
    ![image](https://github.com/Turfal/apache_log_parser/assets/130888083/3c27111e-ddb5-4609-a9d1-ccbae9e299f8)
    
    -Сортировка по ip и колличеству находится по адресу http://localhost:5000/logs/grouped (Чтобы отсортировать, необходимо нажать на интересующий вас пункт 'ip' или 'count')
+   
    ![image](https://github.com/Turfal/apache_log_parser/assets/130888083/b7bf7c4a-623d-48fa-80b5-e55012e0dd58)
    
    -Чтобы получить данные в формате json, на главной странице нажать на соответствующий пункт 'Logs as JSON'
    
    -Пример ссылки для получения данных в формате json (http://localhost:5000/logs/grouped/json)
+   
    ![image](https://github.com/Turfal/apache_log_parser/assets/130888083/60ac6d14-9767-443c-8610-2afd4a5a1bc7)
    
    ![image](https://github.com/Turfal/apache_log_parser/assets/130888083/51f7ec8e-348d-4f36-880f-e357dca1df5e)
