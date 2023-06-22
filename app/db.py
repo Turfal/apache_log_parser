@@ -48,7 +48,9 @@ def get_grouped_by_ip():
     return grouped_entries
 
 def get_grouped_by_date():
-    return db.session.query(db.func.date(LogEntry.date), db.func.count(db.func.date(LogEntry.date))).group_by(db.func.date(LogEntry.date)).all()
+    result = db.session.query(db.func.date(LogEntry.date), db.func.count(db.func.date(LogEntry.date))).group_by(db.func.date(LogEntry.date)).all()
+    grouped_entries = [{'date': entry[0], 'count': entry[1]} for entry in result]
+    return grouped_entries
 
 if __name__ == '__main__':
     with app.app_context():
